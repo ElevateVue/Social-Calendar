@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orbit — Social Media Launch Calendar</title>
+  <style>
+    :root {
+      --purple: #7863ff;
+      --purple-light: #9382ff;
+      --purple-dark: #5a48e0;
+      --cyan: #7ae6f2;
+      --cyan-light: #95eaf5;
+      --dark: #2f3346;
+      --bg: #0c0f1d;
+      --bg2: #131728;
+      --bg3: #1a1f35;
+      --bg4: #1f2540;
+      --border: rgba(120,99,255,0.18);
+      --border2: rgba(122,230,242,0.15);
+      --text: #e8eaf2;
+      --text-muted: #7d82a0;
+      --text-dim: #4a4f6a;
+      --instagram: #e1306c;
+      --instagram-bg: rgba(225,48,108,0.12);
+      --linkedin: #0077b5;
+      --linkedin-bg: rgba(0,119,181,0.12);
+      --soft-launch: rgba(120,99,255,0.15);
+      --full-launch: rgba(122,230,242,0.12);
+      --grad: linear-gradient(135deg, #7863ff, #7ae6f2);
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--grad);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 14px; color: #fff;
+      letter-spacing: -1px;
+    }
+    .logo-text { font-size: 15px; font-weight: 600; color: var(--text); }
+    .logo-text span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--grad);
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .header-meta { font-size: 12px; color: var(--text-muted); }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 48px 32px 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .hero h1 span {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: 15px; color: var(--text-muted); max-width: 600px; }
+
+    /* ─── STATS ─── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      padding: 24px 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .stat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-size: 30px;
+      font-weight: 700;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+    .stat-card .label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* ─── PHASE LEGEND ─── */
+    .phase-bar {
+      display: flex;
+      gap: 12px;
+      padding: 0 32px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .phase-label { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-right: 4px; }
+    .phase-chip {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; padding: 4px 12px;
+      border-radius: 20px; font-weight: 600;
+    }
+    .phase-chip.soft { background: rgba(120,99,255,0.2); color: var(--purple-light); border: 1px solid rgba(120,99,255,0.3); }
+    .phase-chip.full { background: rgba(122,230,242,0.15); color: var(--cyan); border: 1px solid rgba(122,230,242,0.25); }
+    .phase-chip .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .phase-chip.soft .dot { background: var(--purple); }
+    .phase-chip.full .dot { background: var(--cyan); }
+
+    /* ─── CONTROLS ─── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      padding: 0 32px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-group { display: flex; gap: 6px; }
+    .filter-btn {
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    .filter-btn:hover { border-color: var(--purple); color: var(--text); }
+    .filter-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .filter-btn.active.instagram { background: var(--instagram); border-color: var(--instagram); }
+    .filter-btn.active.linkedin { background: var(--linkedin); border-color: var(--linkedin); }
+    .divider { width: 1px; height: 28px; background: var(--border); margin: 0 4px; }
+    .controls-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+    .week-nav {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--text-muted);
+    }
+    .week-nav button {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .week-nav button:hover { border-color: var(--purple); }
+    #week-label { font-weight: 600; min-width: 80px; text-align: center; }
+
+    /* ─── TIMELINE ─── */
+    .timeline {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    /* ─── WEEK SECTION ─── */
+    .week-section { margin-bottom: 40px; }
+    .week-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .week-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .week-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .week-dates { font-size: 12px; color: var(--text-muted); }
+    .week-phase {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .week-phase.soft { background: rgba(120,99,255,0.2); color: var(--purple-light); }
+    .week-phase.full { background: rgba(122,230,242,0.15); color: var(--cyan); }
+    .week-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* ─── DAY ROW ─── */
+    .day-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+      align-items: start;
+    }
+    .day-label {
+      padding-top: 16px;
+      text-align: right;
+    }
+    .day-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .day-date { font-size: 11px; color: var(--text-muted); }
+    .day-column { display: flex; flex-direction: column; gap: 10px; }
+    .day-column.empty {
+      background: var(--bg2);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ─── POST CARD ─── */
+    .post-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.22s;
+      position: relative;
+      overflow: hidden;
+    }
+    .post-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .post-card.instagram::before { background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .post-card.linkedin::before { background: #0077b5; }
+    .post-card:hover {
+      border-color: var(--purple);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(120,99,255,0.15);
+    }
+    .post-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .platform-pill {
+      display: flex; align-items: center; gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .platform-pill.instagram { background: var(--instagram-bg); color: #e1306c; }
+    .platform-pill.linkedin { background: var(--linkedin-bg); color: #3fa7d6; }
+    .platform-icon { font-size: 12px; }
+    .post-type {
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+    .post-hook {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .post-theme {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .post-cta {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--purple-light);
+      font-weight: 600;
+    }
+    .view-details {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: rgba(120,99,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+      color: var(--purple-light);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .post-card:hover .view-details { opacity: 1; }
+
+    /* ─── COLUMN HEADERS ─── */
+    .col-headers {
+      display: grid;
+      grid-template-columns: 100px 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .col-header {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-left: 2px;
+    }
+    .col-header.instagram { color: #e1306c; }
+    .col-header.linkedin { color: #3fa7d6; }
+    .col-header .ch-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .col-header.instagram .ch-dot { background: #e1306c; }
+    .col-header.linkedin .ch-dot { background: #0077b5; }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7,8,15,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { border-color: var(--purple); color: var(--text); }
+    .modal-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+    .modal-title { font-size: 18px; font-weight: 700; line-height: 1.3; }
+    .modal-body { padding: 20px 24px 24px; }
+    .modal-section { margin-bottom: 20px; }
+    .modal-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .modal-section p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.65;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .hashtag-row {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .hashtag {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(120,99,255,0.12);
+      color: var(--purple-light);
+      border: 1px solid rgba(120,99,255,0.2);
+    }
+    .cta-box {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(120,99,255,0.1);
+      border: 1px solid rgba(120,99,255,0.25);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .cta-icon { font-size: 16px; }
+
+    /* ─── EMPTY WEEK ─── */
+    .no-posts {
+      background: var(--bg2);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 40px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--dark); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+    /* ─── PHASE DIVIDER ─── */
+    .phase-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 32px 0;
+    }
+    .phase-divider-line { flex: 1; height: 1px; }
+    .phase-divider-line.soft { background: linear-gradient(90deg, transparent, var(--purple)); }
+    .phase-divider-line.full { background: linear-gradient(90deg, var(--cyan), transparent); }
+    .phase-divider-badge {
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .phase-divider-badge.soft {
+      background: rgba(120,99,255,0.15);
+      color: var(--purple-light);
+      border: 1px solid rgba(120,99,255,0.3);
+    }
+    .phase-divider-badge.full {
+      background: rgba(122,230,242,0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(122,230,242,0.25);
+    }
+
+    /* ─── HIDDEN ─── */
+    .week-section.hidden { display: none; }
+    .post-card.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">EV</div>
+    <div class="logo-text"><span>Elevate Vue</span> · Orbit</div>
+  </div>
+  <div class="header-badge">🛰️ Launch Calendar</div>
+  <div class="header-meta">May 4 – June 14, 2026 &nbsp;·&nbsp; 6 Weeks</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Orbit <span>Social Media Launch Calendar</span></h1>
+  <p>A 6-week content strategy across Instagram and LinkedIn — 3 weeks of soft launch to build awareness, followed by a full product launch campaign.</p>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-card">
+    <span class="num">36</span>
+    <div class="label">Total Posts</div>
+  </div>
+  <div class="stat-card">
+    <span class="num">6</span>
+    <div class="label">Weeks</div>
+  </div>
+  <div class="stat-card">
+    <span class="num">18</span>
+    <div class="label">Instagram Posts</div>
+  </div>
+  <div class="stat-card">
+    <span class="num">18</span>
+    <div class="label">LinkedIn Posts</div>
+  </div>
+  <div class="stat-card">
+    <span class="num">3+3</span>
+    <div class="label">Soft + Full Launch</div>
+  </div>
+</div>
+
+<!-- PHASE BAR -->
+<div class="phase-bar">
+  <span class="phase-label">PHASES:</span>
+  <div class="phase-chip soft"><div class="dot"></div> Soft Launch · Weeks 1–3 · May 4–24</div>
+  <div class="phase-chip full"><div class="dot"></div> Full Launch · Weeks 4–6 · May 25–Jun 14</div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="filter-group" id="platform-filters">
+    <button class="filter-btn active" data-platform="all" onclick="filterPlatform('all', this)">All Platforms</button>
+    <button class="filter-btn instagram" data-platform="instagram" onclick="filterPlatform('instagram', this)">📷 Instagram</button>
+    <button class="filter-btn linkedin" data-platform="linkedin" onclick="filterPlatform('linkedin', this)">💼 LinkedIn</button>
+  </div>
+  <div class="divider"></div>
+  <div class="filter-group" id="phase-filters">
+    <button class="filter-btn active" data-phase="all" onclick="filterPhase('all', this)">All Phases</button>
+    <button class="filter-btn" data-phase="soft" onclick="filterPhase('soft', this)">🌙 Soft Launch</button>
+    <button class="filter-btn" data-phase="full" onclick="filterPhase('full', this)">🚀 Full Launch</button>
+  </div>
+  <div class="controls-right">
+    <div class="week-nav">
+      <button onclick="scrollToWeek('prev')">‹</button>
+      <span id="week-label">All Weeks</span>
+      <button onclick="scrollToWeek('next')">›</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline" id="timeline">
+
+  <!-- SOFT LAUNCH DIVIDER -->
+  <div class="phase-divider">
+    <div class="phase-divider-line soft"></div>
+    <div class="phase-divider-badge soft">🌙 Phase 1 — Soft Launch · May 4–24</div>
+    <div class="phase-divider-line soft" style="background: linear-gradient(90deg, var(--purple), transparent)"></div>
+  </div>
+
+  <!-- WEEK 1 -->
+  <div class="week-section" data-week="1" data-phase="soft">
+    <div class="week-header">
+      <span class="week-num">Week 01</span>
+      <span class="week-title">Something Big Is Coming</span>
+      <span class="week-dates">May 4–10, 2026</span>
+      <div class="week-phase soft">Soft Launch</div>
+      <div class="week-line"></div>
+    </div>
+    <div class="col-headers">
+      <div></div>
+      <div class="col-header instagram"><div class="ch-dot"></div> Instagram</div>
+      <div class="col-header linkedin"><div class="ch-dot"></div> LinkedIn</div>
+    </div>
+
+    <!-- Mon May 4 -->
+    <div class="day-row" data-date="May 4">
+      <div class="day-label"><div class="day-name">Mon</div><div class="day-date">May 4</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="The Quiet Before the Storm"
+          data-type="Text / Image Post"
+          data-theme="Teaser — Build Curiosity"
+          data-hook="We've been unusually quiet lately. Here's why."
+          data-caption="We've been unusually quiet lately. Here's why — we've been building something that will change how businesses manage their social media forever. Not hype. Just a real solution to a real problem every business owner knows too well. Watch this space. 🛰️"
+          data-hashtags="#ComingSoon #SocialMediaMarketing #Orbit #BuildingInPublic #MarketingTool"
+          data-cta="Follow + turn on notifications so you don't miss the reveal.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Text / Image</div>
+          </div>
+          <div class="post-hook">We've been unusually quiet lately. Here's why.</div>
+          <div class="post-theme">🎯 Teaser — Build Curiosity</div>
+          <div class="post-cta">→ Follow + turn on notifications</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tue May 5 -->
+    <div class="day-row" data-date="May 5">
+      <div class="day-label"><div class="day-name">Tue</div><div class="day-date">May 5</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="Something Is Coming — Teaser"
+          data-type="Feed Post (Graphic)"
+          data-theme="Mystery Teaser"
+          data-hook="Your social media strategy is about to get a whole lot smarter. 👀"
+          data-caption="Your social media strategy is about to get a whole lot smarter. 👀 What if managing your brand's entire social presence took less effort than your morning coffee? Something is coming. Stay close. ☕"
+          data-hashtags="#ComingSoon #SocialMedia #MarketingTool #ContentStrategy #SmallBusiness"
+          data-cta="Follow so you don't miss the reveal.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post</div>
+          </div>
+          <div class="post-hook">Your social media is about to get a whole lot smarter. 👀</div>
+          <div class="post-theme">🎯 Mystery Teaser</div>
+          <div class="post-cta">→ Follow for the reveal</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Wed May 6 -->
+    <div class="day-row" data-date="May 6">
+      <div class="day-label"><div class="day-name">Wed</div><div class="day-date">May 6</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="Why 80% of Businesses Fail at Social Media"
+          data-type="Long-Form Post / Article"
+          data-theme="Pain Point — Thought Leadership"
+          data-hook="It's not laziness. It's not lack of ideas. Here's the real reason most businesses can't stay consistent on social media."
+          data-caption="It's not laziness. It's not lack of ideas. The real reason most businesses can't stay consistent on social media comes down to 3 things: 1/ No coherent strategy — just random posts. 2/ Content creation takes hours they don't have. 3/ They can't tell what's actually working. Sound familiar? The solution isn't working harder. It's working smarter. And something that does the heavy lifting for you is coming very soon."
+          data-hashtags="#SocialMediaMarketing #ContentStrategy #BusinessGrowth #MarketingTips #SMBMarketing"
+          data-cta="What's your biggest social media challenge? Drop it in the comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Long-Form Post</div>
+          </div>
+          <div class="post-hook">The real reason 80% of businesses fail at consistent social media.</div>
+          <div class="post-theme">💡 Pain Point — Thought Leadership</div>
+          <div class="post-cta">→ Invite comments on their challenges</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thu May 7 -->
+    <div class="day-row" data-date="May 7">
+      <div class="day-label"><div class="day-name">Thu</div><div class="day-date">May 7</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="5 Signs Your Social Media Is Working Against You"
+          data-type="Carousel (5 Slides)"
+          data-theme="Pain Points — Education"
+          data-hook="If you've ever stared at a blank content calendar wondering what to post... this one's for you."
+          data-caption="If you've ever stared at a blank content calendar wondering what to post next, this one's for you. 5 signs your social media is costing you clients: 1/ You post without a strategy. 2/ You run out of content ideas weekly. 3/ Creating and scheduling takes hours. 4/ You can't measure what's working. 5/ You're doing it all alone. Save this — the fix is coming. 🛰️"
+          data-hashtags="#SocialMediaTips #ContentStrategy #MarketingAgency #SmallBusiness #SocialMediaMarketing"
+          data-cta="Save this post + follow for the solution reveal.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Carousel (5 Slides)</div>
+          </div>
+          <div class="post-hook">5 signs your social media is working against you.</div>
+          <div class="post-theme">💡 Pain Points — Education</div>
+          <div class="post-cta">→ Save this post</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Fri May 8 -->
+    <div class="day-row" data-date="May 8">
+      <div class="day-label"><div class="day-name">Fri</div><div class="day-date">May 8</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="LinkedIn Poll — Social Media Challenges"
+          data-type="Poll"
+          data-theme="Engagement — Audience Research"
+          data-hook="Quick question: What's your biggest social media challenge right now?"
+          data-caption="Quick question for my network: What's your biggest social media challenge right now? A) Coming up with content ideas B) Staying consistent C) Seeing actual ROI D) Finding time to do it all Vote below. The answer to all 4 is coming very soon. 👀"
+          data-hashtags="#Poll #SocialMedia #MarketingChallenges #ContentCreation #BusinessGrowth"
+          data-cta="Vote in the poll. Results + solution dropping soon.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Poll</div>
+          </div>
+          <div class="post-hook">What's your biggest social media challenge right now?</div>
+          <div class="post-theme">📊 Engagement — Audience Research</div>
+          <div class="post-cta">→ Vote + watch for the reveal</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sat May 9 -->
+    <div class="day-row" data-date="May 9">
+      <div class="day-label"><div class="day-name">Sat</div><div class="day-date">May 9</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="Behind the Scenes — Building Something Big"
+          data-type="Reel (15–30 sec)"
+          data-theme="BTS — Build in Public"
+          data-hook="POV: you're building the tool you always wished existed."
+          data-caption="POV: you're building the tool you always wished existed. 🛠️ We've spent months behind the scenes creating something that solves every social media headache we've ever had. Almost ready. Stay close. 🛰️"
+          data-hashtags="#BuildInPublic #BehindTheScenes #ComingSoon #SocialMediaTool #StartupLife"
+          data-cta="Follow so you don't miss the big reveal.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Reel (15–30 sec)</div>
+          </div>
+          <div class="post-hook">POV: you're building the tool you always wished existed.</div>
+          <div class="post-theme">🎬 BTS — Build in Public</div>
+          <div class="post-cta">→ Follow for the reveal</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="week-section" data-week="2" data-phase="soft">
+    <div class="week-header">
+      <span class="week-num">Week 02</span>
+      <span class="week-title">Meet Orbit</span>
+      <span class="week-dates">May 11–17, 2026</span>
+      <div class="week-phase soft">Soft Launch</div>
+      <div class="week-line"></div>
+    </div>
+    <div class="col-headers">
+      <div></div>
+      <div class="col-header instagram"><div class="ch-dot"></div> Instagram</div>
+      <div class="col-header linkedin"><div class="ch-dot"></div> LinkedIn</div>
+    </div>
+
+    <!-- Mon May 11 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Mon</div><div class="day-date">May 11</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="Introducing Orbit — LinkedIn Announcement"
+          data-type="Announcement Post"
+          data-theme="Brand Reveal"
+          data-hook="After months of building, we're ready to introduce Orbit."
+          data-caption="After months of building, we're ready to introduce Orbit — the all-in-one social media management platform that handles strategy, content creation, scheduling, and reporting for your business. No more juggling five different tools. No more guessing what to post. No more wondering if any of it is working. This is what we've been working toward. And we're just getting started. 🌍"
+          data-hashtags="#OrbitApp #SocialMediaManagement #NewProduct #MarketingTool #ProductLaunch"
+          data-cta="Follow Orbit for updates. Early access details coming this week.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Announcement Post</div>
+          </div>
+          <div class="post-hook">After months of building, we're ready to introduce Orbit.</div>
+          <div class="post-theme">🌍 Brand Reveal</div>
+          <div class="post-cta">→ Early access details coming</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tue May 12 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Tue</div><div class="day-date">May 12</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="Introducing Orbit 🌍 — Instagram Brand Reveal"
+          data-type="Feed Post (Brand Graphic)"
+          data-theme="Brand Reveal"
+          data-hook="Introducing Orbit 🌍 — the all-in-one social media management platform built for businesses ready to grow."
+          data-caption="Introducing Orbit 🌍 Strategy. Content. Scheduling. Reports. All in one platform. We built Orbit because social media management shouldn't require 5 different tools, a dedicated team, and 20 hours a week. It should just work. Link in bio → join early access. ✨"
+          data-hashtags="#OrbitApp #SocialMediaManagement #MarketingTool #NewLaunch #ContentCreation"
+          data-cta="Link in bio → Join the early access waitlist.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post (Graphic)</div>
+          </div>
+          <div class="post-hook">Introducing Orbit 🌍 — your all-in-one social media platform.</div>
+          <div class="post-theme">🌍 Brand Reveal</div>
+          <div class="post-cta">→ Link in bio — Early access</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Wed May 13 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Wed</div><div class="day-date">May 13</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="What Orbit Actually Does"
+          data-type="Feature Overview Post"
+          data-theme="Product Education"
+          data-hook="Here's what makes Orbit different from every other social media tool out there."
+          data-caption="Here's what makes Orbit different from every other social media tool out there: ✅ AI strategy engine — custom content strategy for your business ✅ Content generation — captions, ideas, and briefs written for you ✅ Auto-scheduling — posts go out at the perfect time, every time ✅ Intelligent reporting — data that tells you what to do next It's not just a scheduler. It's your entire social media department — in one platform."
+          data-hashtags="#OrbitApp #SocialMediaTools #AIMarketing #ContentAutomation #MarketingAgency"
+          data-cta="Request early access — link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Feature Overview</div>
+          </div>
+          <div class="post-hook">Here's what makes Orbit different from every other social media tool.</div>
+          <div class="post-theme">📋 Product Education</div>
+          <div class="post-cta">→ Request early access</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thu May 14 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Thu</div><div class="day-date">May 14</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="What If Your Social Media Ran on Autopilot?"
+          data-type="Carousel (5 Slides)"
+          data-theme="Feature Education"
+          data-hook="What if your entire social media ran on autopilot — strategy, content, posting, reports?"
+          data-caption="What if your entire social media ran on autopilot? 🚀 Here's what Orbit does for your business: 1/ Builds your custom strategy 2/ Generates your content 3/ Schedules and posts for you 4/ Delivers reports that make sense 5/ All from one dashboard No more juggling tools. No more blank-page paralysis. No more wasted hours. Early access → link in bio."
+          data-hashtags="#OrbitApp #SocialMediaAutomation #ContentStrategy #MarketingTools #BusinessGrowth"
+          data-cta="Link in bio → Join early access waitlist.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Carousel (5 Slides)</div>
+          </div>
+          <div class="post-hook">What if your entire social media ran on autopilot?</div>
+          <div class="post-theme">🚀 Feature Education</div>
+          <div class="post-cta">→ Link in bio — Early access</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Fri May 15 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Fri</div><div class="day-date">May 15</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="Why We Built Orbit — Founder Story"
+          data-type="Founder Story Post"
+          data-theme="Authentic Brand Story"
+          data-hook="We didn't build Orbit because it was a good business idea. We built it because we needed it ourselves."
+          data-caption="We didn't build Orbit because it was a good business idea. We built it because we needed it ourselves. Running social media for multiple clients meant constantly switching between tools, losing hours to content creation, and never feeling confident the strategy was right. We knew there had to be a better way. So we built it. Orbit handles the full cycle — strategy, content, scheduling, and reporting — so businesses can focus on what they do best. That's the mission. That's Orbit."
+          data-hashtags="#OrbitApp #FounderStory #WhyWeBuildThis #SocialMediaManagement #ElevateVue"
+          data-cta="Follow us on this journey. Early access coming soon.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Founder Story</div>
+          </div>
+          <div class="post-hook">We didn't build Orbit because it was a good idea. We built it because we needed it.</div>
+          <div class="post-theme">📖 Authentic Brand Story</div>
+          <div class="post-cta">→ Follow the journey</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sat May 16 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Sat</div><div class="day-date">May 16</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="Orbit Concept Demo Reel"
+          data-type="Reel (20–45 sec)"
+          data-theme="Platform Overview — Visual Demo"
+          data-hook="Imagine handing your social media to someone who never sleeps, never runs out of ideas, and actually knows what works."
+          data-caption="Imagine handing your social media to someone who never sleeps, never runs out of ideas, and actually knows what works. 🌍 That's Orbit. Strategy → Content → Scheduling → Reports. Your entire social presence — handled. Early access open now → link in bio."
+          data-hashtags="#OrbitApp #SocialMediaManagement #AIMarketing #ContentCreation #MarketingAutomation"
+          data-cta="Link in bio → Join early access.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Reel (20–45 sec)</div>
+          </div>
+          <div class="post-hook">Imagine handing your social media to someone who never sleeps or runs out of ideas.</div>
+          <div class="post-theme">🎬 Platform Overview Reel</div>
+          <div class="post-cta">→ Link in bio — Early access</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="week-section" data-week="3" data-phase="soft">
+    <div class="week-header">
+      <span class="week-num">Week 03</span>
+      <span class="week-title">Early Access Is Open</span>
+      <span class="week-dates">May 18–24, 2026</span>
+      <div class="week-phase soft">Soft Launch</div>
+      <div class="week-line"></div>
+    </div>
+    <div class="col-headers">
+      <div></div>
+      <div class="col-header instagram"><div class="ch-dot"></div> Instagram</div>
+      <div class="col-header linkedin"><div class="ch-dot"></div> LinkedIn</div>
+    </div>
+
+    <!-- Mon May 18 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Mon</div><div class="day-date">May 18</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="Early Access Is Now Open"
+          data-type="Announcement Post"
+          data-theme="Urgency + CTA"
+          data-hook="Early access to Orbit is officially open. Limited spots. First come, first served."
+          data-caption="Early access to Orbit is officially open. We're onboarding a limited number of businesses in the first cohort — and this is your window. What you get in early access: ✅ Full platform access ✅ Priority onboarding support ✅ Founding member pricing ✅ Direct input into our roadmap If you've been watching this space — now's the time to move. Comment 'ORBIT' below or click the link."
+          data-hashtags="#OrbitApp #EarlyAccess #SocialMediaManagement #MarketingTool #FoundingMember"
+          data-cta="Comment 'ORBIT' or click the link to apply for early access.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Announcement Post</div>
+          </div>
+          <div class="post-hook">Early access to Orbit is officially open. Limited spots.</div>
+          <div class="post-theme">⚡ Urgency — CTA</div>
+          <div class="post-cta">→ Comment 'ORBIT' to apply</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tue May 19 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Tue</div><div class="day-date">May 19</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="Early Access Open — Instagram"
+          data-type="Feed Post (CTA Graphic)"
+          data-theme="Urgency + Early Access CTA"
+          data-hook="Early access to Orbit is now open 🚀 — limited spots available."
+          data-caption="Early access to Orbit is now open 🚀 Limited spots. Be among the first businesses to run your entire social media on autopilot. Strategy ✓ Content ✓ Scheduling ✓ Reports ✓ First come, first served. Link in bio → sign up now. ⏳"
+          data-hashtags="#OrbitApp #EarlyAccess #SocialMediaManagement #MarketingTool #ContentAutomation"
+          data-cta="Link in bio → Sign up for early access now.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post (CTA Graphic)</div>
+          </div>
+          <div class="post-hook">Early access to Orbit is now open 🚀 — limited spots.</div>
+          <div class="post-theme">⚡ Urgency — Early Access CTA</div>
+          <div class="post-cta">→ Link in bio — Sign up now</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Wed May 20 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Wed</div><div class="day-date">May 20</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="Behind the Build — What We Learned"
+          data-type="Thought Leadership Post"
+          data-theme="Authority — Build Trust"
+          data-hook="What we learned building Orbit — and why we made the decisions we did."
+          data-caption="Building Orbit taught us a lot about what businesses actually need from a social media tool. Here's what surprised us most: 1/ Strategy is the step everyone skips — and it's why everything else fails. 2/ Content creation is the biggest time drain, not scheduling. 3/ Reports are useless unless they tell you what to change. So we built Orbit around those insights. Every feature exists to solve a real problem we experienced firsthand. That's what makes it different."
+          data-hashtags="#OrbitApp #ProductBuild #SocialMediaStrategy #MarketingInsights #BuildInPublic"
+          data-cta="Questions about how we built it? Ask in the comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Thought Leadership</div>
+          </div>
+          <div class="post-hook">What we learned building Orbit — and why we made these decisions.</div>
+          <div class="post-theme">🧠 Authority — Build Trust</div>
+          <div class="post-cta">→ Invite questions in comments</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thu May 21 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Thu</div><div class="day-date">May 21</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="Sneak Peek Inside Orbit's Dashboard"
+          data-type="Carousel (4 Slides — UI Preview)"
+          data-theme="Product Preview"
+          data-hook="Everything you need to run your social media — in one clean dashboard."
+          data-caption="A sneak peek inside Orbit 👀 Here's what's waiting for you: 🗺️ Strategy Hub — your custom content roadmap ✍️ Content Studio — captions and ideas, generated for you 📅 Scheduler — set it, forget it 📊 Reports — what's working and what to do next Early access → link in bio. Spots are limited. ⏳"
+          data-hashtags="#OrbitApp #ProductPreview #SocialMediaDashboard #MarketingTool #UXDesign"
+          data-cta="Link in bio → Join early access before spots fill.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Carousel — UI Preview</div>
+          </div>
+          <div class="post-hook">Everything you need to run your social media in one dashboard.</div>
+          <div class="post-theme">🖥️ Product Preview</div>
+          <div class="post-cta">→ Link in bio — Limited spots</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Thu May 22 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Fri</div><div class="day-date">May 22</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="soft" onclick="openModal(this)"
+          data-title="Beta Results Teaser"
+          data-type="Results / Social Proof Post"
+          data-theme="Social Proof"
+          data-hook="One of our beta users went from posting 3x/week (inconsistently) to 5x/week across 3 platforms — with zero additional headcount."
+          data-caption="One of our beta users — a boutique marketing agency — went from posting 3 times a week (inconsistently) to 5 times a week across 3 platforms, consistently, with zero additional headcount. That's what Orbit does. It's not magic. It's a system that handles the work so your team doesn't have to. Early access is open now — and it's closing soon."
+          data-hashtags="#OrbitApp #BetaResults #SocialMediaROI #MarketingAgency #ContentStrategy"
+          data-cta="Early access is closing soon — apply now.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Results Post</div>
+          </div>
+          <div class="post-hook">Our beta user went from 3x/week to 5x/week across 3 platforms — zero extra headcount.</div>
+          <div class="post-theme">📈 Social Proof</div>
+          <div class="post-cta">→ Early access closing soon</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sat May 23 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Sat</div><div class="day-date">May 23</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="soft" onclick="openModal(this)"
+          data-title="Beta Tester Quotes — Social Proof"
+          data-type="Feed Post (Quote Card)"
+          data-theme="Social Proof — Testimonials"
+          data-hook="Real feedback from the businesses already using Orbit."
+          data-caption="Real feedback from real businesses already using Orbit 💬 'This would have saved me 15 hours a month.' 'I finally feel in control of our social media.' 'Our engagement went up from week one.' We built this for you. And we can't wait for you to experience it. Join them → link in bio. ✨"
+          data-hashtags="#OrbitApp #CustomerReview #Testimonial #SocialMediaTool #MarketingResults"
+          data-cta="Link in bio → Join the businesses already using Orbit.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post (Quote Card)</div>
+          </div>
+          <div class="post-hook">Real feedback from real businesses already using Orbit.</div>
+          <div class="post-theme">💬 Social Proof — Testimonials</div>
+          <div class="post-cta">→ Link in bio — Join them</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+  </div>
+
+  <!-- FULL LAUNCH DIVIDER -->
+  <div class="phase-divider">
+    <div class="phase-divider-line full" style="background: linear-gradient(90deg, transparent, var(--cyan))"></div>
+    <div class="phase-divider-badge full">🚀 Phase 2 — Full Launch · May 25–Jun 14</div>
+    <div class="phase-divider-line full" style="background: linear-gradient(90deg, var(--cyan), transparent)"></div>
+  </div>
+
+  <!-- WEEK 4 -->
+  <div class="week-section" data-week="4" data-phase="full">
+    <div class="week-header">
+      <span class="week-num">Week 04</span>
+      <span class="week-title">We're Live — Official Launch</span>
+      <span class="week-dates">May 25–31, 2026</span>
+      <div class="week-phase full">Full Launch</div>
+      <div class="week-line"></div>
+    </div>
+    <div class="col-headers">
+      <div></div>
+      <div class="col-header instagram"><div class="ch-dot"></div> Instagram</div>
+      <div class="col-header linkedin"><div class="ch-dot"></div> LinkedIn</div>
+    </div>
+
+    <!-- Mon May 25 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Mon</div><div class="day-date">May 25</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="🚀 Orbit Is Live — Launch Day Announcement"
+          data-type="Launch Announcement"
+          data-theme="Launch Day — High Energy"
+          data-hook="Today's the day. Orbit is live. 🌍"
+          data-caption="Today's the day. Orbit is live. 🌍 We built this for every business owner who's ever felt like social media was a full-time job they didn't sign up for. For every agency stretched thin across client accounts. For every marketing manager juggling strategy, creation, and reporting alone. Strategy. Content. Scheduling. Reports. All done for you — in one platform. Sign up today. The link is in the comments. 🚀"
+          data-hashtags="#OrbitLaunch #LaunchDay #OrbitApp #SocialMediaManagement #MarketingTool"
+          data-cta="Sign up today — link in comments. Tag someone who needs this.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Launch Announcement</div>
+          </div>
+          <div class="post-hook">Today's the day. Orbit is live. 🌍</div>
+          <div class="post-theme">🚀 Launch Day — High Energy</div>
+          <div class="post-cta">→ Sign up now — link in comments</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tue May 26 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Tue</div><div class="day-date">May 26</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="🎉 Orbit Is Officially LIVE"
+          data-type="Feed Post (Launch Graphic)"
+          data-theme="Launch Day"
+          data-hook="The wait is over. Orbit is officially LIVE. 🎉"
+          data-caption="🎉 Orbit is officially LIVE. Your all-in-one social media management platform is here — and it's ready for you. Strategy ✓ Content ✓ Scheduling ✓ Reports ✓ Everything your social media needs, nothing you don't. Sign up now → link in bio. Let's go. 🛰️"
+          data-hashtags="#OrbitLaunch #LaunchDay #OrbitApp #SocialMediaManagement #MarketingPlatform"
+          data-cta="Link in bio → Sign up now. Tag a business owner who needs this!">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post (Launch Graphic)</div>
+          </div>
+          <div class="post-hook">The wait is over. Orbit is officially LIVE. 🎉</div>
+          <div class="post-theme">🎉 Launch Day</div>
+          <div class="post-cta">→ Link in bio — Sign up now</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Wed May 27 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Wed</div><div class="day-date">May 27</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="How Orbit's AI Strategy Engine Works"
+          data-type="Feature Deep Dive"
+          data-theme="Feature Spotlight 1 — Strategy"
+          data-hook="Most businesses post without a real strategy. Here's how Orbit fixes that in minutes."
+          data-caption="Most businesses post without a real strategy. Here's how Orbit fixes that in minutes: Step 1: Tell Orbit about your business, audience, and goals. Step 2: Orbit's AI generates a custom content strategy built around your objectives. Step 3: You receive a weekly topic plan tailored to your industry and audience. Step 4: Every content idea is tied directly to a business goal. No more guessing what to post. No more posting for the sake of posting. Strategy that actually makes sense — built for your business in minutes."
+          data-hashtags="#OrbitApp #ContentStrategy #AIMarketing #SocialMediaStrategy #MarketingAutomation"
+          data-cta="Try it for your business → link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Feature Deep Dive</div>
+          </div>
+          <div class="post-hook">How Orbit's AI strategy engine builds your social media plan in minutes.</div>
+          <div class="post-theme">🗺️ Feature Spotlight 1 — Strategy</div>
+          <div class="post-cta">→ Try it for your business</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thu May 28 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Thu</div><div class="day-date">May 28</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="Feature Spotlight 1 — Strategy"
+          data-type="Carousel (4 Slides)"
+          data-theme="Feature Education"
+          data-hook="No more guessing what to post. Orbit builds your entire strategy in minutes."
+          data-caption="No more guessing what to post. 🗺️ Here's how Orbit's strategy engine works for your business: 1/ Tell Orbit about your brand and goals 2/ AI generates your custom content strategy 3/ You get a weekly topic plan by platform 4/ Every idea is tied to a real business objective From blank calendar to complete strategy — in minutes. Try it now → link in bio."
+          data-hashtags="#OrbitApp #ContentStrategy #SocialMediaTips #AIMarketing #MarketingTools"
+          data-cta="Try Orbit free → link in bio.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Carousel (4 Slides)</div>
+          </div>
+          <div class="post-hook">No more guessing what to post — Orbit builds your strategy in minutes.</div>
+          <div class="post-theme">🗺️ Feature Spotlight 1 — Strategy</div>
+          <div class="post-cta">→ Try Orbit free — link in bio</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Fri May 29 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Fri</div><div class="day-date">May 29</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="The Future of Social Media Management"
+          data-type="Thought Leadership Post"
+          data-theme="Vision — Thought Leadership"
+          data-hook="The future of social media management isn't more tools. It's one tool that does it all."
+          data-caption="The future of social media management isn't more tools. It's one tool that does it all intelligently. For too long, businesses have been duct-taping together schedulers, content tools, strategy frameworks, and analytics dashboards — and getting mediocre results from a fragmented system. Orbit is built on a different premise: everything should work together, automatically, around your specific goals. That's not a feature. That's the philosophy. And it changes everything."
+          data-hashtags="#OrbitApp #FutureOfMarketing #SocialMediaManagement #AIMarketing #MarketingInnovation"
+          data-cta="Join the businesses already doing marketing differently → link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Thought Leadership</div>
+          </div>
+          <div class="post-hook">The future of social media isn't more tools. It's one tool that does it all.</div>
+          <div class="post-theme">🔭 Vision — Thought Leadership</div>
+          <div class="post-cta">→ Join businesses doing it differently</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sat May 30 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Sat</div><div class="day-date">May 30</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="60-Second Demo Reel — Watch Orbit Work"
+          data-type="Reel (60 sec Demo)"
+          data-theme="Platform Demo"
+          data-hook="Watch Orbit plan an entire month of social media content in under 60 seconds."
+          data-caption="Watch Orbit plan an entire month of social media content in under 60 seconds. 🕐 This is what having a full marketing team feels like — without the team. Strategy → Content → Schedule → Report. Done. Try it for your business → link in bio."
+          data-hashtags="#OrbitApp #Demo #SocialMediaTool #ContentAutomation #MarketingPlatform"
+          data-cta="Try it free → link in bio. Share this with someone who needs it.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Reel (60 sec Demo)</div>
+          </div>
+          <div class="post-hook">Watch Orbit plan a month of social content in under 60 seconds. 🕐</div>
+          <div class="post-theme">🎬 Platform Demo</div>
+          <div class="post-cta">→ Try it free — link in bio</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+  </div>
+
+  <!-- WEEK 5 -->
+  <div class="week-section" data-week="5" data-phase="full">
+    <div class="week-header">
+      <span class="week-num">Week 05</span>
+      <span class="week-title">Feature Deep Dives</span>
+      <span class="week-dates">Jun 1–7, 2026</span>
+      <div class="week-phase full">Full Launch</div>
+      <div class="week-line"></div>
+    </div>
+    <div class="col-headers">
+      <div></div>
+      <div class="col-header instagram"><div class="ch-dot"></div> Instagram</div>
+      <div class="col-header linkedin"><div class="ch-dot"></div> LinkedIn</div>
+    </div>
+
+    <!-- Mon June 1 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Mon</div><div class="day-date">Jun 1</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="Feature Spotlight: Orbit's Content Generation Engine"
+          data-type="Feature Deep Dive"
+          data-theme="Feature Spotlight 2 — Content"
+          data-hook="Orbit's content engine doesn't just write captions. It understands your brand."
+          data-caption="Orbit's content generation engine doesn't just write captions. It understands your brand, your audience, and your goals — then creates content that actually performs. Here's what it generates for every post: ✍️ Platform-optimized copy (LinkedIn post ≠ Instagram caption) #️⃣ Strategic hashtag sets 🎨 Image and graphic brief ⏰ Optimal posting time recommendation All in seconds. For every post. Across every platform. No blank page. No guessing. Just content that works."
+          data-hashtags="#OrbitApp #ContentGeneration #AIContent #SocialMediaMarketing #ContentCreation"
+          data-cta="See it in action → link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Feature Deep Dive</div>
+          </div>
+          <div class="post-hook">Orbit's content engine understands your brand — and writes accordingly.</div>
+          <div class="post-theme">✍️ Feature Spotlight 2 — Content</div>
+          <div class="post-cta">→ See it in action</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tue June 2 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Tue</div><div class="day-date">Jun 2</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="Feature Spotlight 2 — Content Generation"
+          data-type="Carousel (4 Slides)"
+          data-theme="Feature Education — Content"
+          data-hook="Never stare at a blank caption box again. Orbit writes your content for you."
+          data-caption="Never stare at a blank caption box again. ✍️ Here's how Orbit creates your content: 1/ Orbit learns your brand voice and tone 2/ Generates platform-specific captions 3/ Suggests strategic hashtags for reach 4/ Provides image briefs for every post Your content calendar — filled, branded, and ready to post. Try it → link in bio."
+          data-hashtags="#OrbitApp #ContentGeneration #AIMarketing #SocialMediaContent #CaptionWriting"
+          data-cta="Try Orbit free → link in bio.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Carousel (4 Slides)</div>
+          </div>
+          <div class="post-hook">Never stare at a blank caption box again. Orbit writes it for you.</div>
+          <div class="post-theme">✍️ Feature Spotlight 2 — Content</div>
+          <div class="post-cta">→ Try Orbit free — link in bio</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Wed June 3 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Wed</div><div class="day-date">Jun 3</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="Orbit's Auto-Scheduler — Never Miss a Post"
+          data-type="Feature Deep Dive"
+          data-theme="Feature Spotlight 3 — Scheduling"
+          data-hook="The #1 thing killing your social media consistency? Running out of time."
+          data-caption="The #1 thing killing your social media consistency? Running out of time. Orbit's auto-scheduler takes the calendar off your plate entirely. Here's how it works: 📅 Orbit selects optimal posting times per platform ⏰ Your content goes live automatically — no manual publishing 🔔 You get a summary of what posted and how it performed 📊 Scheduling adjusts based on your audience's activity All while you focus on running your business. Your content goes out — on time, every time."
+          data-hashtags="#OrbitApp #SocialMediaScheduler #ContentAutomation #PostingSchedule #MarketingTools"
+          data-cta="Never miss a post again → link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Feature Deep Dive</div>
+          </div>
+          <div class="post-hook">Never miss a posting day again — Orbit's auto-scheduler handles it all.</div>
+          <div class="post-theme">📅 Feature Spotlight 3 — Scheduling</div>
+          <div class="post-cta">→ Never miss a post again</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thu June 4 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Thu</div><div class="day-date">Jun 4</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="Feature Spotlight 3 — Auto-Scheduling Reel"
+          data-type="Reel (20–30 sec)"
+          data-theme="Feature Demo — Scheduling"
+          data-hook="Set it and forget it. Orbit schedules your posts at the optimal time — automatically."
+          data-caption="Set it and forget it. 📅 Orbit schedules your posts at the perfect time, automatically. Your posts go out flawlessly — even when you're in back-to-back meetings, on a client call, or just living your life. Consistency, on autopilot. Try Orbit → link in bio."
+          data-hashtags="#OrbitApp #AutoScheduler #SocialMediaAutomation #ContentScheduling #MarketingTool"
+          data-cta="Try Orbit free → link in bio.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Reel (20–30 sec)</div>
+          </div>
+          <div class="post-hook">Set it and forget it — Orbit posts for you, automatically.</div>
+          <div class="post-theme">📅 Feature Spotlight 3 — Scheduling</div>
+          <div class="post-cta">→ Try Orbit free — link in bio</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Fri June 5 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Fri</div><div class="day-date">Jun 5</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="Orbit Analytics — Data That Tells You What to Do"
+          data-type="Feature Deep Dive"
+          data-theme="Feature Spotlight 4 — Analytics"
+          data-hook="Orbit's reporting doesn't just show you numbers. It tells you what they mean."
+          data-caption="Orbit's reporting doesn't just show you numbers. It tells you what they mean. Here's what Orbit's analytics give you: 📈 Which posts drove the most engagement 🎯 Which platforms are actually converting for your business 🔄 What to do differently next week 📊 Plain-language performance summaries Not just dashboards. Not just data. Actionable insights that improve your strategy week over week."
+          data-hashtags="#OrbitApp #SocialMediaAnalytics #MarketingReports #ContentPerformance #DataDrivenMarketing"
+          data-cta="See what your data is really saying → link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Feature Deep Dive</div>
+          </div>
+          <div class="post-hook">Orbit's reports don't just show data — they tell you what to do with it.</div>
+          <div class="post-theme">📊 Feature Spotlight 4 — Analytics</div>
+          <div class="post-cta">→ See what your data is really saying</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sat June 6 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Sat</div><div class="day-date">Jun 6</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="Feature Spotlight 4 — Reports"
+          data-type="Feed Post (Data Visual)"
+          data-theme="Feature Education — Analytics"
+          data-hook="Finally — reports that actually tell you what's working. 📊"
+          data-caption="Finally — reports that actually tell you what's working. 📊 Orbit breaks down your social media performance in plain language, not just numbers. → What's driving engagement → What's converting → What to adjust next week Data you can act on. Not just stare at. See your reports → link in bio."
+          data-hashtags="#OrbitApp #SocialMediaAnalytics #ReportsAndInsights #ContentPerformance #MarketingData"
+          data-cta="See your reports → link in bio.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post (Data Visual)</div>
+          </div>
+          <div class="post-hook">Finally — reports that actually tell you what's working. 📊</div>
+          <div class="post-theme">📊 Feature Spotlight 4 — Analytics</div>
+          <div class="post-cta">→ See your reports — link in bio</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+  </div>
+
+  <!-- WEEK 6 -->
+  <div class="week-section" data-week="6" data-phase="full">
+    <div class="week-header">
+      <span class="week-num">Week 06</span>
+      <span class="week-title">Social Proof & Final Push</span>
+      <span class="week-dates">Jun 8–14, 2026</span>
+      <div class="week-phase full">Full Launch</div>
+      <div class="week-line"></div>
+    </div>
+    <div class="col-headers">
+      <div></div>
+      <div class="col-header instagram"><div class="ch-dot"></div> Instagram</div>
+      <div class="col-header linkedin"><div class="ch-dot"></div> LinkedIn</div>
+    </div>
+
+    <!-- Mon June 8 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Mon</div><div class="day-date">Jun 8</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="Orbit Users — Early Results"
+          data-type="Social Proof / Results Post"
+          data-theme="Social Proof — Launch Results"
+          data-hook="Two weeks in — here's what Orbit users are already seeing."
+          data-caption="Two weeks since launch — and the results are already speaking. Orbit users are reporting: ⏱️ Average 12 hours/week saved on social media management 📅 3x increase in posting consistency 📈 Average 40% lift in engagement Within 2 weeks. Not months. Weeks. This is what happens when strategy, content, scheduling, and reporting all work together in one place. Add your numbers to the list → link in comments."
+          data-hashtags="#OrbitApp #CustomerResults #SocialMediaROI #MarketingResults #ProductLaunch"
+          data-cta="Add your results to the list — link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Results Post</div>
+          </div>
+          <div class="post-hook">Two weeks in — here's what Orbit users are already seeing.</div>
+          <div class="post-theme">📈 Social Proof — Launch Results</div>
+          <div class="post-cta">→ Add your results to the list</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tue June 9 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Tue</div><div class="day-date">Jun 9</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="Customer Testimonial — Quote Card"
+          data-type="Feed Post (Quote Graphic)"
+          data-theme="Social Proof — Testimonial"
+          data-hook="Real results. Real businesses. Real growth."
+          data-caption="Real results. Real businesses. 💬 'Orbit saved our agency 20 hours a month — and our clients have never been happier with their social performance.' We built this for you. And we're just getting started. Join them → link in bio. ✨"
+          data-hashtags="#OrbitApp #CustomerSuccess #Testimonial #MarketingAgency #SocialMediaResults"
+          data-cta="Link in bio → Join the businesses growing with Orbit.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post (Quote Graphic)</div>
+          </div>
+          <div class="post-hook">Real results. Real businesses. Real growth. 💬</div>
+          <div class="post-theme">💬 Social Proof — Testimonial</div>
+          <div class="post-cta">→ Link in bio — Join them</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Wed June 10 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Wed</div><div class="day-date">Jun 10</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="Case Study — Boutique Agency Scales Without Headcount"
+          data-type="Mini Case Study"
+          data-theme="Case Study — Social Proof"
+          data-hook="How a boutique marketing agency manages 12 client accounts using Orbit — without adding a single team member."
+          data-caption="How a boutique marketing agency manages 12 client accounts with Orbit — without adding a single team member. The challenge: They were managing social media for 12 clients across Instagram and LinkedIn. Content creation alone was consuming 30+ hours a week. The solution: They onboarded Orbit. Orbit now handles strategy, content generation, and scheduling for all 12 clients. The team focuses on client relationships and strategy oversight. The results: ✅ 30 hours/week saved ✅ Content output doubled ✅ Client satisfaction scores up 28% That's what scaling without burnout looks like."
+          data-hashtags="#OrbitApp #CaseStudy #MarketingAgency #ScaleYourBusiness #SocialMediaManagement"
+          data-cta="Could this be your business? Try Orbit → link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Mini Case Study</div>
+          </div>
+          <div class="post-hook">How one agency manages 12 clients using Orbit — without adding headcount.</div>
+          <div class="post-theme">📋 Case Study — Social Proof</div>
+          <div class="post-cta">→ Could this be your business?</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thu June 11 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Thu</div><div class="day-date">Jun 11</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="Case Study Carousel — Businesses Using Orbit"
+          data-type="Carousel (4 Slides)"
+          data-theme="Case Study — Social Proof"
+          data-hook="3 businesses using Orbit to save 10+ hours a week."
+          data-caption="3 businesses using Orbit to save 10+ hours a week 🚀 Business 1: Boutique agency — 30hrs/week saved, managing 12 clients Business 2: Small e-commerce brand — 3x posting consistency, 40% engagement lift Business 3: Marketing manager (in-house) — went from reactive to proactive in 2 weeks This is what having a real system looks like. Join them → link in bio."
+          data-hashtags="#OrbitApp #CaseStudy #CustomerSuccess #SocialMediaResults #BusinessGrowth"
+          data-cta="Link in bio → Start your free trial.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Carousel (4 Slides)</div>
+          </div>
+          <div class="post-hook">3 businesses using Orbit to save 10+ hours a week.</div>
+          <div class="post-theme">📋 Case Study — Social Proof</div>
+          <div class="post-cta">→ Link in bio — Start free trial</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+
+    <!-- Fri June 12 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Fri</div><div class="day-date">Jun 12</div></div>
+      <div class="day-column empty">—</div>
+      <div class="day-column">
+        <div class="post-card linkedin" data-platform="linkedin" data-phase="full" onclick="openModal(this)"
+          data-title="Closing Vision — Social Media Shouldn't Feel Like a Burden"
+          data-type="Vision / Closing Post"
+          data-theme="Brand Vision — Final Push"
+          data-hook="Social media shouldn't feel like a burden. It should feel like your best marketing asset."
+          data-caption="Social media shouldn't feel like a burden. It should feel like your best marketing asset. That's what we built Orbit for. A platform that takes the heavy lifting off your plate — so every post is strategic, every piece of content is on-brand, every report is clear, and your time is spent on what actually matters. If you haven't tried it yet, now's the time. We're just getting started — and so are you."
+          data-hashtags="#OrbitApp #SocialMediaManagement #MarketingVision #GrowYourBusiness #ElevateVue"
+          data-cta="Start your free trial → link in comments.">
+          <div class="post-card-header">
+            <div class="platform-pill linkedin"><span class="platform-icon">💼</span> LinkedIn</div>
+            <div class="post-type">Vision / Closing Post</div>
+          </div>
+          <div class="post-hook">Social media shouldn't be a burden — it should be your best marketing asset.</div>
+          <div class="post-theme">🔭 Brand Vision — Final Push</div>
+          <div class="post-cta">→ Start your free trial</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sat June 13 -->
+    <div class="day-row">
+      <div class="day-label"><div class="day-name">Sat</div><div class="day-date">Jun 13</div></div>
+      <div class="day-column">
+        <div class="post-card instagram" data-platform="instagram" data-phase="full" onclick="openModal(this)"
+          data-title="Final CTA — Everything Your Social Media Needs"
+          data-type="Feed Post (Bold Graphic)"
+          data-theme="Final CTA Push"
+          data-hook="Everything you need. Nothing you don't."
+          data-caption="Your social media, completely handled. 🛰️ Strategy ✓ Content ✓ Scheduling ✓ Reports ✓ That's Orbit. Start your free trial today — link in bio. Everything you need. Nothing you don't."
+          data-hashtags="#OrbitApp #SocialMediaManagement #StartYourTrial #MarketingTool #AllInOne"
+          data-cta="Link in bio → Start your free trial today.">
+          <div class="post-card-header">
+            <div class="platform-pill instagram"><span class="platform-icon">📷</span> Instagram</div>
+            <div class="post-type">Feed Post (Bold Graphic)</div>
+          </div>
+          <div class="post-hook">Everything you need. Nothing you don't. That's Orbit. 🛰️</div>
+          <div class="post-theme">🎯 Final CTA Push</div>
+          <div class="post-cta">→ Link in bio — Start free trial</div>
+          <div class="view-details">↗</div>
+        </div>
+      </div>
+      <div class="day-column empty">—</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-meta" id="modal-meta"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">Hook / Opening Line</div>
+        <p id="modal-hook"></p>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Full Caption</div>
+        <p id="modal-caption"></p>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Hashtags</div>
+        <div class="hashtag-row" id="modal-hashtags"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Call to Action</div>
+        <div class="cta-box"><span class="cta-icon">→</span><span id="modal-cta"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let activePlatform = 'all';
+  let activePhase = 'all';
+  let currentWeek = 0;
+  const TOTAL_WEEKS = 6;
+
+  function filterPlatform(platform, btn) {
+    activePlatform = platform;
+    document.querySelectorAll('#platform-filters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function filterPhase(phase, btn) {
+    activePhase = phase;
+    document.querySelectorAll('#phase-filters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function applyFilters() {
+    document.querySelectorAll('.week-section').forEach(week => {
+      const weekPhase = week.dataset.phase;
+      const phaseMatch = activePhase === 'all' || weekPhase === activePhase;
+      const weekNum = parseInt(week.dataset.week);
+      const weekMatch = currentWeek === 0 || weekNum === currentWeek;
+      week.classList.toggle('hidden', !phaseMatch || !weekMatch);
+    });
+
+    document.querySelectorAll('.post-card').forEach(card => {
+      const cardPlatform = card.dataset.platform;
+      const cardPhase = card.dataset.phase;
+      const platformMatch = activePlatform === 'all' || cardPlatform === activePlatform;
+      const phaseMatch = activePhase === 'all' || cardPhase === activePhase;
+      card.classList.toggle('hidden', !platformMatch || !phaseMatch);
+    });
+
+    // Handle empty column display
+    document.querySelectorAll('.day-row').forEach(row => {
+      const igCards = row.querySelectorAll('.post-card.instagram:not(.hidden)');
+      const liCards = row.querySelectorAll('.post-card.linkedin:not(.hidden)');
+      const cols = row.querySelectorAll('.day-column');
+      // Hide rows where all platform cards are hidden in both columns
+      const hasVisible = igCards.length > 0 || liCards.length > 0;
+      row.style.display = hasVisible ? '' : 'none';
+    });
+  }
+
+  function scrollToWeek(dir) {
+    if (dir === 'next') {
+      currentWeek = currentWeek === TOTAL_WEEKS ? 0 : currentWeek + 1;
+    } else {
+      currentWeek = currentWeek === 0 ? TOTAL_WEEKS : currentWeek - 1;
+    }
+    const label = document.getElementById('week-label');
+    label.textContent = currentWeek === 0 ? 'All Weeks' : `Week ${currentWeek}`;
+    applyFilters();
+    if (currentWeek > 0) {
+      const target = document.querySelector(`.week-section[data-week="${currentWeek}"]`);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function openModal(card) {
+    const platform = card.dataset.platform;
+    const phase = card.dataset.phase;
+    const type = card.dataset.type;
+
+    document.getElementById('modal-title').textContent = card.dataset.title;
+    document.getElementById('modal-hook').textContent = card.dataset.hook;
+    document.getElementById('modal-caption').textContent = card.dataset.caption;
+    document.getElementById('modal-cta').textContent = card.dataset.cta;
+
+    // Meta chips
+    const meta = document.getElementById('modal-meta');
+    const platLabel = platform === 'instagram' ? '📷 Instagram' : '💼 LinkedIn';
+    const phaseLabel = phase === 'soft' ? '🌙 Soft Launch' : '🚀 Full Launch';
+    meta.innerHTML = `
+      <div class="platform-pill ${platform}">${platLabel}</div>
+      <div class="post-type">${type}</div>
+      <div class="post-type" style="color:${phase === 'soft' ? 'var(--purple-light)' : 'var(--cyan)'}">${phaseLabel}</div>
+    `;
+
+    // Hashtags
+    const hashContainer = document.getElementById('modal-hashtags');
+    hashContainer.innerHTML = '';
+    const tags = (card.dataset.hashtags || '').split(' ').filter(t => t.startsWith('#'));
+    tags.forEach(tag => {
+      const span = document.createElement('span');
+      span.className = 'hashtag';
+      span.textContent = tag;
+      hashContainer.appendChild(span);
+    });
+
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOnOverlay(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+</body>
+</html>
